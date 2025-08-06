@@ -9,11 +9,19 @@ const getHabits = async (req, res) => {
     const { page = 1, limit = 20, category, isActive = true } = req.query;
     
     // Build query
-    let query = { userId: req.user._id, isActive: isActive === 'true' };
+    let query = { userId: req.user._id };
+    
+    if (isActive === 'true') {
+      query.isActive = true;
+    } else if (isActive === 'false') {
+      query.isActive = false;
+    }
     
     if (category) {
       query.category = category;
     }
+    
+    console.log('Query:', query);
     
     const habits = await Habit.find(query)
       .sort({ createdAt: -1 })
@@ -69,7 +77,9 @@ const getHabit = async (req, res) => {
 // @desc    Create new habit
 // @route   POST /api/habits
 // @access  Public
+
 const createHabit = async (req, res) => {
+  console.log('req.user:', req.user); // <-- Move it here!
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -80,15 +90,16 @@ const createHabit = async (req, res) => {
       });
     }
     
-    const habit = await Habit.create({
+    const newHabit = new Habit({
       ...req.body,
-      userId: req.user._id
+      userId: req.user._id // <-- Make sure this is set!
     });
+    await newHabit.save();
     
     res.status(201).json({
       status: 'success',
       message: 'Habit created successfully',
-      data: habit
+      data: newHabit
     });
   } catch (error) {
     res.status(500).json({
