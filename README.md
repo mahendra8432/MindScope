@@ -1,256 +1,241 @@
-# 🧠 MindWell Pro - Mental Wellness Companion
+# 🧠 MindScope – AI-Powered Mental Wellness Platform
 
-A comprehensive MERN stack application for tracking and improving mental wellness through mood tracking, journaling, goal setting, habit formation, and AI-powered insights.
+![React](https://img.shields.io/badge/React-18-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)
+![Node.js](https://img.shields.io/badge/Node.js-Backend-green)
+![MongoDB](https://img.shields.io/badge/MongoDB-Database-green)
 
-## 🚀 Features
+MindScope is a **full-stack MERN mental wellness web application** designed to help users understand, track, and improve their mental well-being.
+It combines **mood tracking, journaling, habit building, goal management**, and **AI-powered insights** into a single unified platform.
 
-- **Mood Tracking** - Log daily moods with intensity levels and notes
-- **Journaling** - Write and organize personal reflections with tags and categories
-- **Goal Management** - Set goals with milestones and track progress
-- **Habit Tracking** - Build healthy habits with streak tracking and calendar view
-- **Analytics Dashboard** - Visualize wellness data with interactive charts
-- **Wellness Tips** - Browse curated mental health tips and recommendations
-- **AI Insights** - Get personalized recommendations based on your data
-- **Dark/Light Mode** - Customizable theme preferences
-- **Responsive Design** - Works seamlessly on all devices
+The application focuses on **clean UI, structured data analytics, and personalized AI recommendations** to deliver a meaningful and scalable wellness experience.
+
+---
+
+## ❓ Why MindScope?
+
+Most mental wellness applications focus on isolated features.
+MindScope takes a **holistic approach** by integrating multiple wellness aspects and analyzing user behavior patterns to provide **actionable insights powered by AI**.
+
+This project demonstrates **full-stack engineering, secure authentication, scalable architecture, and real-world AI integration**.
+
+---
+
+## 🚀 Key Features
+
+* **User Authentication** – Secure JWT-based login & registration
+* **Mood Tracking** – Log daily moods with intensity and notes
+* **Journaling** – Write, organize, and reflect with structured entries
+* **Goal Management** – Create goals with milestones and progress tracking
+* **Habit Tracking** – Build habits with streak calculation and calendar view
+* **Analytics Dashboard** – Visualize wellness trends using interactive charts
+* **AI-Powered Insights** – Personalized recommendations using Google Gemini
+* **Dark / Light Mode** – Theme support for better accessibility
+* **Responsive Design** – Optimized for desktop and mobile devices
+
+---
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React 18** with TypeScript
-- **Tailwind CSS** for styling
-- **Framer Motion** for animations
-- **Recharts** for data visualization
-- **React Router** for navigation
-- **React Hook Form** for form handling
-- **Date-fns** for date manipulation
+
+* React 18 + TypeScript
+* Tailwind CSS
+* Framer Motion
+* Recharts
+* React Router
+* React Hook Form
+* date-fns
 
 ### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **Express Validator** for input validation
-- **CORS** for cross-origin requests
-- **Helmet** for security headers
-- **Rate Limiting** for API protection
+
+* Node.js & Express.js
+* MongoDB with Mongoose
+* JWT Authentication
+* Express Validator
+* CORS & Helmet
+* API Rate Limiting
+
+### AI
+
+* Google Gemini API for personalized wellness insights
+
+---
 
 ## 📁 Project Structure
 
 ```
-mindwell-pro/
-├── src/                    # Frontend React application
+MindScope/
+├── src/                    # Frontend (React + TypeScript)
 │   ├── components/         # Reusable UI components
-│   ├── pages/             # Main application pages
-│   ├── hooks/             # Custom React hooks
-│   ├── services/          # API service functions
-│   ├── types/             # TypeScript definitions
-│   └── utils/             # Utility functions
-├── server/                # Backend Node.js application
-│   ├── controllers/       # Route handlers
-│   ├── models/           # MongoDB schemas
-│   ├── routes/           # API route definitions
-│   ├── config/           # Database configuration
-│   └── server.js         # Main server file
+│   ├── pages/              # Application pages
+│   ├── hooks/              # Custom React hooks
+│   ├── services/           # API services
+│   ├── types/              # Type definitions
+│   └── utils/              # Utility functions
+│
+├── server/                 # Backend (Node + Express)
+│   ├── controllers/        # Request handlers
+│   ├── models/             # MongoDB schemas
+│   ├── routes/             # API routes
+│   ├── middleware/         # Authentication & validation middleware
+│   └── index.js            # Server entry point
+│
+├── assets/                 # Screenshots & demo media
 └── README.md
 ```
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
-- Node.js 18+ installed
-- MongoDB Atlas account (or local MongoDB)
-- npm or yarn package manager
 
-### Installation
+## 📸 Screenshots
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd mindwell-pro
-   ```
 
-2. **Install frontend dependencies**
-   ```bash
-   npm install
-   ```
+| Dashboard Overview | Quick Wellness | Authentication |
+|--------------------|----------------|----------------|
+| ![](assets/screenshots/Dashboard.png) | ![](assets/screenshots/Wellness.png) | ![](assets/screenshots/Authentication.png) |
 
-3. **Install backend dependencies**
-   ```bash
-   cd server
-   npm install
-   ```
+| Mood Tracking | Journaling |
+|---------------|------------|
+| ![](assets/screenshots/Mood.png) | ![](assets/screenshots/journal.png) |
 
-4. **Environment Setup**
-   
-   Create a `.env` file in the `server/` directory:
-   ```env
-   MONGO_URI=mongodb+srv://bansodems:Mahendra%401120@cluster0.ndt16cp.mongodb.net/mindwell?retryWrites=true&w=majority&appName=Cluster0
-   PORT=5000
-   NODE_ENV=development
-   ```
+| Goals Management | Habit Tracking |
+|------------------|---------------|
+| ![](assets/screenshots/Goal.png) | ![](assets/screenshots/Habit.png) |
 
-### Running the Application
-
-1. **Start the backend server**
-   ```bash
-   cd server
-   npm run dev
-   ```
-   Backend will run on: http://localhost:5000
-
-2. **Start the frontend development server**
-   ```bash
-   # In the root directory
-   npm run dev
-   ```
-   Frontend will run on: http://localhost:5173
-
-3. **Access the application**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:5000/api
-   - Health Check: http://localhost:5000/api/health
-
-## 📡 API Endpoints
-
-### Moods
-- `GET /api/moods` - Get all mood entries
-- `POST /api/moods` - Create new mood entry
-- `GET /api/moods/:id` - Get specific mood entry
-- `PUT /api/moods/:id` - Update mood entry
-- `DELETE /api/moods/:id` - Delete mood entry
-
-### Journals
-- `GET /api/journals` - Get all journal entries
-- `POST /api/journals` - Create new journal entry
-- `GET /api/journals/:id` - Get specific journal entry
-- `PUT /api/journals/:id` - Update journal entry
-- `DELETE /api/journals/:id` - Delete journal entry
-
-### Goals
-- `GET /api/goals` - Get all goals
-- `POST /api/goals` - Create new goal
-- `GET /api/goals/:id` - Get specific goal
-- `PUT /api/goals/:id` - Update goal
-- `PATCH /api/goals/:id/milestones/:milestoneId` - Toggle milestone completion
-- `DELETE /api/goals/:id` - Delete goal
-
-### Habits
-- `GET /api/habits` - Get all habits
-- `POST /api/habits` - Create new habit
-- `GET /api/habits/:id` - Get specific habit
-- `PUT /api/habits/:id` - Update habit
-- `PATCH /api/habits/:id/toggle` - Toggle habit completion
-- `DELETE /api/habits/:id` - Delete habit
-
-### Tips
-- `GET /api/tips` - Get all wellness tips
-- `POST /api/tips` - Create new tip
-- `GET /api/tips/:id` - Get specific tip
-- `PUT /api/tips/:id` - Update tip
-- `PATCH /api/tips/:id/complete` - Mark tip as completed
-- `DELETE /api/tips/:id` - Delete tip
-
-### Analytics
-- `GET /api/analytics/dashboard` - Get dashboard analytics
-- `GET /api/analytics/mood-trends` - Get mood trend data
-
-## 🔧 Development Scripts
-
-### Frontend
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run lint         # Run ESLint
-```
-
-### Backend
-```bash
-npm start            # Start production server
-npm run dev          # Start development server with nodemon
-```
-
-## 🎨 Key Features Implementation
-
-### Mood Tracking
-- Interactive mood selection with intensity sliders
-- Tag system for categorizing moods
-- Historical mood data visualization
-- Trend analysis and insights
-
-### Journaling
-- Rich text editor with markdown support
-- Tag-based organization system
-- Search and filter functionality
-- Word count and reading time calculation
-
-### Goal Management
-- Milestone-based progress tracking
-- Automatic goal completion when all milestones are done
-- Priority and category organization
-- Progress visualization with charts
-
-### Habit Tracking
-- Calendar-based completion tracking
-- Streak calculation and gamification
-- Category-based habit organization
-- Visual progress indicators
-
-### Analytics Dashboard
-- Interactive charts using Recharts
-- Mood distribution pie charts
-- Weekly trend line graphs
-- AI-powered insights and recommendations
-
-## 🔒 Security Features
-
-- Input validation with Express Validator
-- Rate limiting to prevent abuse
-- CORS configuration for secure cross-origin requests
-- Helmet.js for security headers
-- MongoDB injection protection
-
-## 🌟 UI/UX Features
-
-- **Responsive Design** - Mobile-first approach with Tailwind CSS
-- **Dark/Light Mode** - System preference detection and manual toggle
-- **Smooth Animations** - Framer Motion for delightful interactions
-- **Loading States** - Proper loading indicators for all API calls
-- **Error Handling** - User-friendly error messages and toast notifications
-- **Accessibility** - ARIA labels and keyboard navigation support
-
-## 🚀 Deployment
-
-### Frontend (Netlify/Vercel)
-```bash
-npm run build
-# Deploy the dist/ folder
-```
-
-### Backend (Heroku/Railway)
-```bash
-# Set environment variables in your hosting platform
-# Deploy the server/ directory
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-- Icons by [Lucide React](https://lucide.dev/)
-- Charts by [Recharts](https://recharts.org/)
-- Animations by [Framer Motion](https://www.framer.com/motion/)
-- Styling by [Tailwind CSS](https://tailwindcss.com/)
+|
 
 ---
 
-**MindWell Pro** - Your comprehensive mental wellness companion! 🧠✨
+## 🎥 Demo Video
+
+A complete walkthrough demo will be added after final deployment.
+
+---
+
+## 🚀 Getting Started (Local Setup)
+
+### Prerequisites
+
+* Node.js (v18+)
+* MongoDB Atlas or local MongoDB
+* npm or yarn
+
+---
+
+### Frontend Setup
+
+```bash
+git clone https://github.com/mahendra8432/MindScope.git
+cd MindScope
+npm install
+npm run dev
+```
+
+Frontend runs at:
+
+```
+http://localhost:5173
+```
+
+---
+
+### Backend Setup
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+Backend runs at:
+
+```
+http://localhost:5000
+```
+
+---
+
+### Environment Variables
+
+Create a `.env` file inside `server/`:
+
+```
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+GEMINI_API_KEY=your_gemini_api_key
+PORT=5000
+NODE_ENV=development
+```
+
+Note: Keep all environment variables private and out of version control.
+
+---
+
+## 📡 API Overview
+
+* `/api/auth` – Authentication routes
+* `/api/moods` – Mood tracking
+* `/api/journals` – Journal entries
+* `/api/goals` – Goal management
+* `/api/habits` – Habit tracking
+* `/api/analytics` – Dashboard analytics
+* `/api/ai` – AI insights
+
+Note: All routes (except authentication) are protected using JWT middleware.
+
+---
+
+## 🔒 Security Practices
+
+* JWT-based authentication
+* Input validation on all routes
+* API rate limiting to prevent abuse
+* Secure CORS configuration
+* Helmet for HTTP security headers
+* Environment-based secrets handling
+
+---
+
+## 🌟 UI / UX Highlights
+
+* Clean and modern dashboard layout
+* Smooth animations and transitions
+* Clear data visualizations
+* Loading states & error handling
+* Mobile-friendly and accessible design
+
+---
+
+## 🚀 Deployment
+
+The project is designed to be **deployment-ready**.
+
+* **Frontend:** Vercel / Netlify
+* **Backend:** Render / Railway
+* **Database:** MongoDB Atlas
+
+---
+
+## 🔮 Future Enhancements
+
+* AI-based mood prediction
+* Voice-based journaling
+* Therapist / admin dashboard
+* Push notifications & reminders
+* Cloud storage for journal attachments
+
+---
+
+## 👨‍💻 Author
+
+**Mahendra Bansode**
+Final-year CSE (AIML) student
+Aspiring Full-Stack & AI Engineer
+
+---
+
+## ⭐ Resume Highlight
+
+Built **MindScope**, a production-grade MERN mental wellness platform featuring secure JWT authentication, analytics dashboards, and Gemini-powered AI insights, designed with a scalable full-stack a
+
