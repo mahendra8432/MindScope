@@ -41,7 +41,7 @@ const MoodTracker: React.FC = () => {
     }
   });
 
-  const moods = moodsResponse?.data || [];
+  const moods = Array.isArray(moodsResponse) ? moodsResponse : [];
 
   const handleSubmit = (moodData: Omit<Mood, 'id' | 'createdAt' | 'updatedAt'>) => {
     if (editingMood) {
@@ -75,6 +75,8 @@ const MoodTracker: React.FC = () => {
     const matchesFilter = filterMood === 'all' || mood.moodType === filterMood;
     return matchesSearch && matchesFilter;
   });
+
+  console.log('moodsResponse', moodsResponse);
 
   return (
     <div className="space-y-8">

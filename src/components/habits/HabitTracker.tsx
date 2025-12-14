@@ -58,7 +58,7 @@ const HabitTracker: React.FC<HabitTrackerProps> = ({ habit, onToggleCompletion, 
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              onClick={() => onDeleteHabit(habit.id)}
+              onClick={() => onDeleteHabit && onDeleteHabit(habit._id)}
               className="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
               title="Delete habit"
             >
@@ -104,10 +104,10 @@ const HabitTracker: React.FC<HabitTrackerProps> = ({ habit, onToggleCompletion, 
 
             return (
               <motion.button
-                key={index}
+                key={`${habit._id}-${format(date, 'yyyy-MM-dd')}`}
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
-                onClick={() => onToggleCompletion(habit.id, format(date, 'yyyy-MM-dd'))}
+                onClick={() => onToggleCompletion(habit._id, format(date, 'yyyy-MM-dd'))}
                 className={`
                   w-6 h-6 rounded-md text-xs font-medium transition-all duration-200
                   ${isCompleted 

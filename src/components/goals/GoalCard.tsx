@@ -136,14 +136,14 @@ const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onToggleMil
             <div className="space-y-2">
               {visibleMilestones.map((milestone, index) => (
                 <motion.div
-                  key={milestone.id}
+                  key={milestone._id}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ x: 2 }}
                   className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer group"
-                  onClick={() => onToggleMilestone(goal.id, milestone.id)}
+                  onClick={() => onToggleMilestone(goal.id, milestone._id)}
                 >
                   <motion.div
                     whileHover={{ scale: 1.1 }}

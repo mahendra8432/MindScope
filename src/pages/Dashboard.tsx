@@ -14,6 +14,9 @@ import { Mood, Journal, Goal, Habit } from '../types';
 import { mockTips } from '../data/mockData';
 import MoodChart from '../components/analytics/MoodChart';
 import toast from 'react-hot-toast';
+import MoodCard from '../components/mood/MoodCard';
+import JournalCard from '../components/journal/JournalCard';
+import GoalCard from '../components/goals/GoalCard';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -27,19 +30,28 @@ const Dashboard: React.FC = () => {
   const { data: habitsResponse, refetch: refetchHabits } = useAPI(() => habitsAPI.getAll(), { immediate: true });
   const { data: analyticsResponse, refetch: refetchAnalytics } = useAPI(() => analyticsAPI.getDashboard(), { immediate: true });
   
-  const moods = moodsResponse?.data || [];
-  const journals = journalsResponse?.data || [];
-  const goals = goalsResponse?.data || [];
-  const habits = habitsResponse?.data || [];
-  const analytics = analyticsResponse?.data || {
-    summary: { averageMood: 0, totalWords: 0, moodEntries: 0, journalEntries: 0, activeHabits: 0 },
-    weeklyMoodData: [],
-    moodDistribution: [],
-    journalStats: { totalEntries: 0, totalWords: 0, averageWords: 0, categoriesUsed: 0 },
-    habitStats: [],
-    insights: []
-  };
-  
+ const moods = moodsResponse || [];
+const journals = journalsResponse || [];
+const goals = goalsResponse || [];
+const habits = habitsResponse || [];
+const analytics = analyticsResponse || {
+  summary: { averageMood: 0, totalWords: 0, moodEntries: 0, journalEntries: 0, activeHabits: 0 },
+  weeklyMoodData: [],
+  moodDistribution: [],
+  journalStats: { totalEntries: 0, totalWords: 0, averageWords: 0, categoriesUsed: 0 },
+  habitStats: [],
+  insights: []
+};
+
+  console.log("🐞 Moods Response:", moodsResponse);
+console.log("🐞 Journals Response:", journalsResponse);
+console.log("🐞 Goals Response:", goalsResponse);
+console.log("🐞 Habits Response:", habitsResponse);
+console.log("🐞 Analytics Response:", analyticsResponse);
+console.log("🔍 Example Mood:", moods[0]);
+console.log("🔍 Example Journal:", journals[0]);
+console.log("🔍 Example Goal:", goals[0]);
+
   const [showTipsModal, setShowTipsModal] = useState(false);
   const [selectedTip, setSelectedTip] = useState<any>(null);
   const [timerActive, setTimerActive] = useState(false);
@@ -428,27 +440,24 @@ const Dashboard: React.FC = () => {
   const currentDailyTip = mockTips[currentTipIndex];
 
   return (
+    
     <div className="space-y-8">
       {/* Welcome Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-primary-900/20 dark:via-gray-900 dark:to-secondary-900/20 rounded-3xl p-8 border border-primary-100 dark:border-primary-800"
+        className="bluerred-lg relative bg-gradient-to-br from-primary-100 to-secondary-100 dark:from-primary-900/20 dark:to-secondary-900/20 rounded-2xl p-8 shadow-lg overflow-hidden"
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-200/30 to-secondary-200/30 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-accent-200/30 to-primary-200/30 rounded-full blur-3xl"></div>
         
         <div className="relative z-10 max-w-4xl">
           <div className="flex items-center space-x-3 mb-4">
-            <motion.div
-              animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
-            >
-              <Sparkles className="w-8 h-8 text-primary-600 dark:text-primary-400" />
-            </motion.div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary-600 via-secondary-600 to-accent-600 bg-clip-text text-transparent">
+
+             <h1 className="text-4xl font-bold text-primary-1000">
               Welcome back{user?.name ? `, ${user.name}` : ''}! 👋
             </h1>
+
           </div>
           
           <p className="text-xl text-gray-700 dark:text-gray-300 mb-6 leading-relaxed">
@@ -771,11 +780,50 @@ const Dashboard: React.FC = () => {
                 )}
               </div>
             </motion.div>
-          </div>
+  
+                  {/* Recent Moods */}
+
+<div className="space-y-4 mt-8">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Recent Moods</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {moods.map((mood) => (
+          <MoodCard
+            key={mood._id || mood.id}
+            mood={mood}
+            onEdit={() => {}}
+            onDelete={() => {}}
+          />
+        ))}
+      </div>
+    </div>
+
+    {/* Recent Journals */}
+    <div className="space-y-4 mt-8">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Recent Journals</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {journals.slice(0, 6).map((journal) => (
+          <JournalCard key={journal._id} journal={journal} />
+        ))}
+      </div>
+    </div>
+
+    {/* Active Goals */}
+    <div className="space-y-4 mt-8">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">Active Goals</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {goals.slice(0, 6).map((goal) => (
+          <GoalCard key={goal._id} goal={goal} />
+        ))}
+      </div>
+    </div>
+  </div>
+          
         )}
       </AnimatePresence>
     </div>
+
   );
+
 };
 
 export default Dashboard;

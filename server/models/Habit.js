@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// In your Habit.js model, add this index
 
 const habitCompletionSchema = new mongoose.Schema({
   date: {
@@ -116,5 +117,5 @@ habitSchema.methods.calculateCurrentStreak = function() {
   this.longestStreak = Math.max(this.longestStreak, streak);
   return streak;
 };
-
+habitSchema.index({ userId: 1, name: 1 }, { unique: true });
 module.exports = mongoose.model('Habit', habitSchema);

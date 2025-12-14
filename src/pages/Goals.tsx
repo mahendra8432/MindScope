@@ -43,13 +43,17 @@ const Goals: React.FC = () => {
   });
   const toggleMilestoneMutation = useMutation(goalsAPI.toggleMilestone, {
     onSuccess: () => {
-      console.log('✅ Milestone toggled, refreshing data...');
+      toast.success('Milestone updated!');
       refetch();
       localStorage.setItem('data-updated', Date.now().toString());
+    },
+    onError: (error) => {
+      toast.error('Milestone not found');
+      console.error(error);
     }
   });
 
-  const goals = goalsResponse?.data || [];
+  const goals = Array.isArray(goalsResponse) ? goalsResponse : [];
 
   const handleSubmit = (goalData: Omit<Goal, 'id' | 'createdAt' | 'updatedAt'>) => {
     if (editingGoal) {
@@ -79,7 +83,6 @@ const Goals: React.FC = () => {
 
   const handleToggleMilestone = (goalId: string, milestoneId: string) => {
     toggleMilestoneMutation.mutate(goalId, milestoneId);
-    toast.success('Milestone updated!');
   };
 
   const filteredGoals = goals.filter(goal => {

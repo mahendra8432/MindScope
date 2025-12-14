@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Brain, Sparkles } from 'lucide-react';
+import { Brain, Heart, Sparkles } from 'lucide-react';
 import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
@@ -19,7 +19,7 @@ const AuthPage: React.FC = () => {
           <div className="flex items-center justify-center lg:justify-start space-x-3 mb-8">
             <div className="relative">
               <div className="w-16 h-16 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <Brain className="w-8 h-8 text-white" />
+                <Heart className="w-8 h-8 text-Pink" />
               </div>
               <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-900 animate-pulse"></div>
             </div>

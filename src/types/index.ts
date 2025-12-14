@@ -62,14 +62,14 @@ export interface Goal {
 }
 
 export interface Milestone {
-  id: string;
+  _id: string;
   title: string;
   completed: boolean;
   completedAt?: string;
 }
 
 export interface Habit {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   category: 'health' | 'mindfulness' | 'productivity' | 'social' | 'learning';
@@ -77,15 +77,14 @@ export interface Habit {
   targetCount: number;
   currentStreak: number;
   longestStreak: number;
-  completions: HabitCompletion[];
+  completions: {
+    date: string;
+    completed: boolean;
+    note?: string;
+  }[];
   isActive: boolean;
   createdAt: string;
-}
-
-export interface HabitCompletion {
-  date: string;
-  completed: boolean;
-  note?: string;
+  updatedAt: string;
 }
 
 export interface User {

@@ -5,8 +5,8 @@ import { Edit2, Trash2, Smile, Meh, Frown } from 'lucide-react';
 
 interface MoodCardProps {
   mood: Mood;
-  onEdit: (mood: Mood) => void;
-  onDelete: (id: string) => void;
+  onEdit?: (mood: Mood) => void;
+  onDelete?: (id: string) => void;
 }
 
 const moodConfig = {
@@ -18,7 +18,7 @@ const moodConfig = {
 };
 
 const MoodCard: React.FC<MoodCardProps> = ({ mood, onEdit, onDelete }) => {
-  const config = moodConfig[mood.moodType];
+  const config = moodConfig[mood.moodType] || moodConfig['neutral']; // fallback to neutral
   const Icon = config.icon;
 
   return (
@@ -44,13 +44,13 @@ const MoodCard: React.FC<MoodCardProps> = ({ mood, onEdit, onDelete }) => {
           </span>
           <div className="flex space-x-1">
             <button
-              onClick={() => onEdit(mood)}
+              onClick={() => onEdit?.(mood)}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200"
             >
               <Edit2 className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300" />
             </button>
             <button
-              onClick={() => onDelete(mood.id)}
+              onClick={() => onDelete?.(mood.id)}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:shadow-sm transition-all duration-200"
             >
               <Trash2 className="w-4 h-4 text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400" />
@@ -62,7 +62,9 @@ const MoodCard: React.FC<MoodCardProps> = ({ mood, onEdit, onDelete }) => {
       {mood.note && (
         <div className="space-y-2">
           <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{mood.note}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">{formatTime(mood.createdAt)}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {formatTime(mood.createdAt || mood.date)}
+          </p>
         </div>
       )}
 

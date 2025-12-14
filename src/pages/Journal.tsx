@@ -41,7 +41,7 @@ const Journal: React.FC = () => {
     }
   });
 
-  const journals = journalsResponse?.data || [];
+  const journals = Array.isArray(journalsResponse) ? journalsResponse : [];
 
   // Get all unique tags
   const allTags = Array.from(new Set(journals.flatMap(journal => journal.tags)));

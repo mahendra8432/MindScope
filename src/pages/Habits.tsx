@@ -3,10 +3,56 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Search, Filter, Calendar, Flame, Target, TrendingUp, X, Check } from 'lucide-react';
 import { useAPI, useMutation } from '../hooks/useAPI';
 import { habitsAPI } from '../services/api';
-import { Habit, HabitCompletion } from '../types';
+import { Habit } from '../types';
 import HabitTracker from '../components/habits/HabitTracker';
 import toast from 'react-hot-toast';
 import { format } from 'date-fns';
+
+// Default habits template
+const defaultHabits = [
+  {
+    name: 'Drink 8 glasses of water',
+    description: 'Stay hydrated throughout the day for better health and energy',
+    category: 'health',
+    frequency: 'daily',
+    targetCount: 8,
+  },
+  {
+    name: '10 minutes meditation',
+    description: 'Practice mindfulness to reduce stress and improve focus',
+    category: 'mindfulness',
+    frequency: 'daily',
+    targetCount: 1,
+  },
+  {
+    name: 'Read for 30 minutes',
+    description: 'Expand knowledge and improve cognitive function',
+    category: 'learning',
+    frequency: 'daily',
+    targetCount: 1,
+  },
+  {
+    name: '30 minutes exercise',
+    description: 'Maintain physical fitness and boost energy levels',
+    category: 'health',
+    frequency: 'daily',
+    targetCount: 1,
+  },
+  {
+    name: 'Write in journal',
+    description: 'Reflect on daily experiences and thoughts',
+    category: 'mindfulness',
+    frequency: 'daily',
+    targetCount: 1,
+  },
+  {
+    name: 'No phone 1 hour before bed',
+    description: 'Improve sleep quality by reducing screen time',
+    category: 'health',
+    frequency: 'daily',
+    targetCount: 1,
+  },
+];
 
 const Habits: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,82 +63,106 @@ const Habits: React.FC = () => {
     name: '',
     description: '',
     category: 'health' as const,
+    frequency: 'daily' as const,
+    targetCount: 1,
   });
 
-  // API hooks
-  const { data: habitsResponse, loading, refetch } = useAPI(() => habitsAPI.getAll(), { immediate: true });
+  const {
+    data: habitsResponse,
+    loading,
+    error,
+    refetch
+  } = useAPI(() => habitsAPI.getAll({ isActive: true }), { immediate: true });
+
   const createMutation = useMutation(habitsAPI.create, {
     onSuccess: () => {
       toast.success('Habit created successfully!');
-      console.log('✅ Habit created, refreshing data...');
       refetch();
-      localStorage.setItem('data-updated', Date.now().toString());
-    }
-  });
-  const deleteMutation = useMutation(habitsAPI.delete, {
-    onSuccess: () => {
-      toast.success('Habit deleted successfully');
-      console.log('✅ Habit deleted, refreshing data...');
-      refetch();
-      localStorage.setItem('data-updated', Date.now().toString());
-    }
-  });
-  const toggleCompletionMutation = useMutation(habitsAPI.toggleCompletion, {
-    onSuccess: () => {
-      toast.success('Habit updated!', { icon: '✅' });
-      console.log('✅ Habit completion toggled, refreshing data...');
-      refetch();
-      localStorage.setItem('data-updated', Date.now().toString());
-    }
+    },
+    onError: (err) => {
+      toast.error('Failed to create habit');
+      console.error(err);
+    },
   });
 
-  const habits = habitsResponse?.data || [];
+  const deleteMutation = useMutation(habitsAPI.delete, {
+    onSuccess: () => {
+      console.log('🗑️ Delete successful, refetching habits...');
+      toast.success('Habit deleted successfully');
+      
+      // Force refetch with a small delay to ensure backend processing is complete
+      setTimeout(() => {
+        refetch();
+      }, 100);
+    },
+    onError: (err) => {
+      console.error('🗑️ Delete failed:', err);
+      toast.error('Failed to delete habit');
+      console.error(err);
+    },
+  });
+
+  const toggleCompletionMutation = useMutation(habitsAPI.toggleCompletion, {
+    onSuccess: () => {
+      toast.success('Habit updated');
+      refetch();
+    },
+    onError: (err) => {
+      toast.error('Failed to update habit');
+      console.error(err);
+    },
+  });
+
+  // Fix: Handle different response structures from useAPI hook
+  const habits: Habit[] = (() => {
+    if (!habitsResponse) return [];
+    
+    // If habitsResponse is already an array (useAPI returns data directly)
+    if (Array.isArray(habitsResponse)) return habitsResponse;
+    
+    // If habitsResponse has a data property
+    if (Array.isArray(habitsResponse.data)) return habitsResponse.data;
+    
+    // If habitsResponse has the full API response structure
+    if (habitsResponse.status === 'success' && Array.isArray(habitsResponse.data)) {
+      return habitsResponse.data;
+    }
+    
+    return [];
+  })();
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('🔄 Habits Response:', habitsResponse);
+    console.log('🔄 Response type:', typeof habitsResponse);
+    console.log('🔄 Is array:', Array.isArray(habitsResponse));
+    console.log('🔄 Has data property:', habitsResponse?.data);
+    console.log('🔄 Parsed Habits:', habits);
+    console.log('🔄 Habits length:', habits.length);
+    console.log('🔄 Loading:', loading);
+    console.log('🔄 Error:', error);
+    
+    // Log each habit's status
+    if (habits.length > 0) {
+      console.log('🔄 Individual habits:');
+      habits.forEach((habit, index) => {
+        console.log(`   ${index + 1}. "${habit.name}" - isActive: ${habit.isActive}, id: ${habit._id}`);
+      });
+    }
+  }, [habitsResponse, habits, loading, error]);
 
   const handleToggleCompletion = (habitId: string, date: string) => {
     toggleCompletionMutation.mutate(habitId, { date });
   };
 
-  const defaultHabits = [
-    {
-      name: 'Morning Meditation',
-      description: 'Start each day with 10 minutes of mindfulness meditation',
-      category: 'mindfulness' as const,
-    },
-    {
-      name: 'Daily Gratitude',
-      description: 'Write down 3 things you\'re grateful for each day',
-      category: 'mindfulness' as const,
-    },
-    {
-      name: 'Evening Walk',
-      description: 'Take a 20-minute walk after dinner to unwind and get fresh air',
-      category: 'health' as const,
-    },
-    {
-      name: 'Read for 30 Minutes',
-      description: 'Read books or articles for personal growth and learning',
-      category: 'learning' as const,
-    },
-    {
-      name: 'Drink 8 Glasses of Water',
-      description: 'Stay hydrated throughout the day for better health',
-      category: 'health' as const,
-    },
-    {
-      name: 'Practice Deep Breathing',
-      description: 'Take 5 minutes for deep breathing exercises to reduce stress',
-      category: 'mindfulness' as const,
-    },
-  ];
-
   const handleDeleteHabit = (habitId: string) => {
-    const habitToDelete = habits.find(h => h.id === habitId);
-    if (habitToDelete && confirm(`Are you sure you want to delete "${habitToDelete.name}"? This action cannot be undone.`)) {
+    const habit = habits.find(h => h._id === habitId);
+    if (habit && confirm(`Delete "${habit.name}"?`)) {
       deleteMutation.mutate(habitId);
     }
   };
 
-  const handleAddHabit = (habitData: typeof defaultHabits[0]) => {
+  const handleAddHabit = (habitData: any) => {
     createMutation.mutate(habitData);
   };
 
@@ -101,40 +171,90 @@ const Habits: React.FC = () => {
       toast.error('Please enter a habit name');
       return;
     }
-
     createMutation.mutate(customHabit);
-    setCustomHabit({ name: '', description: '', category: 'health' });
+    setCustomHabit({ name: '', description: '', category: 'health', frequency: 'daily', targetCount: 1 });
     setShowCustomForm(false);
     setShowHabitForm(false);
   };
 
-  const filteredHabits = habits.filter(habit => {
-    const matchesSearch = habit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         habit.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = filterCategory === 'all' || habit.category === filterCategory;
-    return matchesSearch && matchesCategory && habit.isActive;
-  });
+  const matchesSearch = (habit: Habit) =>
+    habit.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    habit.description.toLowerCase().includes(searchTerm.toLowerCase());
 
-  const stats = {
-    total: habits.filter(h => h.isActive).length,
-    completedToday: habits.filter(h => {
-      const today = format(new Date(), 'yyyy-MM-dd');
-      return h.completions.some(c => c.date === today && c.completed);
-    }).length,
-    longestStreak: Math.max(...habits.map(h => h.longestStreak), 0),
-    averageCompletion: habits.length > 0 
-      ? Math.round(habits.reduce((sum, habit) => {
-          const last30DaysCompletions = habit.completions.filter(completion => {
-            const completionDate = new Date(completion.date);
-            const today = new Date();
-            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
-            return completionDate >= thirtyDaysAgo && completionDate <= today;
-          });
-          const completionRate = (last30DaysCompletions.filter(c => c.completed).length / 30) * 100;
-          return sum + completionRate;
-        }, 0) / habits.length)
-      : 0,
-  };
+  const matchesCategory = (habit: Habit) =>
+    filterCategory === 'all' || habit.category === filterCategory;
+
+  const filteredHabits = habits.filter(
+    habit => matchesSearch(habit) && matchesCategory(habit)
+  );
+
+  const today = format(new Date(), 'yyyy-MM-dd');
+
+  // Calculate stats using useMemo to ensure they update when habits change
+  const stats = React.useMemo(() => {
+    console.log('📊 Calculating stats for habits:', habits.length);
+    console.log('📊 All habits:', habits.map(h => ({ name: h.name, isActive: h.isActive, id: h._id })));
+    
+    // Filter only truly active habits
+    const activeHabits = habits.filter(h => {
+      // Consider habit active if isActive is not explicitly false
+      const isActive = h.isActive !== false;
+      console.log(`📊 Habit "${h.name}": isActive = ${h.isActive}, considered active = ${isActive}`);
+      return isActive;
+    });
+    
+    console.log('📊 Active habits count:', activeHabits.length);
+    console.log('📊 Active habits:', activeHabits.map(h => h.name));
+    
+    const completedTodayCount = activeHabits.filter(h => 
+      h.completions?.some(c => c.date === today && c.completed)
+    ).length;
+    
+    const longestStreakValue = activeHabits.length > 0 ? 
+      Math.max(...activeHabits.map(h => h.longestStreak || 0), 0) : 0;
+    
+    const averageCompletionValue = activeHabits.length > 0
+      ? Math.round(
+          activeHabits.reduce((sum, habit) => {
+            const last30 = habit.completions?.filter(c => {
+              const d = new Date(c.date);
+              const now = new Date();
+              const past = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+              return d >= past && d <= now;
+            }) || [];
+            return sum + (last30.filter(c => c.completed).length / 30) * 100;
+          }, 0) / activeHabits.length
+        )
+      : 0;
+    
+    const finalStats = {
+      total: activeHabits.length,
+      completedToday: completedTodayCount,
+      longestStreak: longestStreakValue,
+      averageCompletion: averageCompletionValue,
+    };
+    
+    console.log('📊 Final stats:', finalStats);
+    return finalStats;
+  }, [habits, today]);
+
+  // Show error if there's an API error
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Habits</h2>
+          <p className="text-gray-600 mb-4">{error.message}</p>
+          <button 
+            onClick={refetch}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -231,11 +351,11 @@ const Habits: React.FC = () => {
       </motion.div>
 
       {/* Habits Grid */}
-      <AnimatePresence>
+      <AnimatePresence mode="popLayout">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredHabits.map((habit, index) => (
             <motion.div
-              key={habit.id}
+              key={habit._id} // Back to using just _id since we'll fix the real issue
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
