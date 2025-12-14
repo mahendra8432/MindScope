@@ -97,7 +97,7 @@ MindScope/
 
 | Mood Tracking | Journaling |
 |---------------|------------|
-| ![](assets/screenshots/Mood.png) | ![](assets/screenshots/journal.png) |
+| ![](assets/screenshots/Mood.png) | ![](assets/screenshots/Journal.png) |
 
 | Goals Management | Habit Tracking |
 |------------------|---------------|
