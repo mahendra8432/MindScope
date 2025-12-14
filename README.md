@@ -229,13 +229,14 @@ The project is designed to be **deployment-ready**.
 
 ## 👨‍💻 Author
 
-**Mahendra Bansode**
-Final-year CSE (AIML) student
-Aspiring Full-Stack & AI Engineer
+**Mahendra Bansode**  
+Final-year CSE (AIML) student  
+Aspiring Full-Stack & AI Engineer  
+📧 Email: msbansode8432@gmail.com
+
 
 ---
 
 ## ⭐ Resume Highlight
-
-Built **MindScope**, a production-grade MERN mental wellness platform featuring secure JWT authentication, analytics dashboards, and Gemini-powered AI insights, designed with a scalable full-stack a
+Built MindScope, a production-grade MERN mental wellness platform featuring secure JWT authentication, analytics dashboards, and Gemini-powered AI insights, designed with a scalable full-stack architecture.
 
