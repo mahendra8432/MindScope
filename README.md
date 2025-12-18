@@ -107,9 +107,6 @@ MindScope/
 
 ---
 
-## 🎥 Demo Video
-
-A complete walkthrough demo will be added after final deployment.
 
 ---
 
